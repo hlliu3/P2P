@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <!--使用配置文件中的属性-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+    <!--数据库连接池 druid.jar spring-jdbc.jar-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+        <property name="username" value="${jdbc.user}"></property>
+    </bean>
+
+    <!--事务管理器 spring-tx.jar-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--事务注解-->
+    <!--<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>-->
+
+    <!--事务xml  spring-tx和spring-jdbc的jar-->
+    <tx:advice id="myTransaction" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!--配置需要事务处理的具体方法和属性配置-->
+            <!--isolation指定事务隔离级别
+                propagation指定事务传播规则
+                read-only指定事务只读
+                rollback-for  no-rollback-for对哪些检查异常进行回滚不提交 指定对哪些异常继续执行不回滚
+                timeout定义事务超时时间-->
+
+            <!-- <tx:method name="shopping" propagation="REQUIRED" timeout="-1" isolation="DEFAULT"
+                       rollback-for="java.lang.NullPointerException,com.bjpowernode.exception.NotEnoughException"></tx:method>-->
+            <!--不需要添加事务处理-->
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"></tx:method>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"></tx:method>
+            <tx:method name="query*" propagation="SUPPORTS" read-only="true"></tx:method>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"></tx:method>
+            <!--设置添加事务的方法，update,insert,delete-->
+            <tx:method name="*" isolation="DEFAULT" timeout="-1"
+                       rollback-for="java.lang.Exception,java.lang.RuntimeException" propagation="REQUIRED"/>
+
+
+        </tx:attributes>
+    </tx:advice>
+
+    <!--通知 spring-aspectj的jar-->
+    <aop:config>
+        <!--配置切入点，service业务包中的所有类的所有方法-->
+        <aop:pointcut id="service" expression="execution(* *..service..*.*(..))"></aop:pointcut>
+        <!--声明增强器，通知切入点的组合，为service添加事务处理-->
+        <aop:advisor advice-ref="myTransaction" pointcut-ref="service"/>
+    </aop:config>
+
+    <!--SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatis-configuration.xml"></property>
+    </bean>
+
+    <!--创建mybatis扫描器，创建dao的代理产生的dao的实现类 value mapper.xml所在包-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <property name="basePackage" value="com.bjpowernode.mapper"></property>
+    </bean>
+
+</beans>
+

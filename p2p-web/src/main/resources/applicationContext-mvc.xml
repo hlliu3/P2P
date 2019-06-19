@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--注解扫描  组件扫描器 一般是扫描controller层-->
+    <context:component-scan base-package="com.bjpowernode.web"></context:component-scan>
+    <!--注解驱动，可以进行数据格式的转换，创建7个对象；可以解决注解加载静态资源文件的冲突问题-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!--加载静态资源文件的方式一：使用springmvc框架-->
+    <!--<mvc:resources mapping="/html/**" location="/html/"></mvc:resources>-->
+    <!--加载静态资源文件的方式二：使用tomcat-->
+    <mvc:default-servlet-handler/>
+
+    <!--拦截器-->
+    <!--<mvc:interceptors>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/loan/**"/>
+            <mvc:exclude-mapping path="/loan/loan"/>
+            <mvc:exclude-mapping path="/loan/loanInfo"/>
+            <mvc:exclude-mapping path="/loan/checkPhone"/>
+            <mvc:exclude-mapping path="/loan/checkCaptcha"/>
+            <mvc:exclude-mapping path="/loan/register"/>
+            <mvc:exclude-mapping path="/loan/login"/>
+            <mvc:exclude-mapping path="/loan/loadStat"/>
+            <bean class="com.bjpowernode.interceptor.UserInterceptor"/>
+        </mvc:interceptor>
+
+    </mvc:interceptors>-->
+
+    <!--加载controller-->
+    <!--<bean id="" class=""></bean>-->
+
+    <!--视图解析器，前置后置-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+</beans>
