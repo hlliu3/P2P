@@ -30,6 +30,13 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
+    public Long createOnlyNum() {
+        BoundValueOperations<String, Object> stringObjectBoundValueOperations = redisTemplate.boundValueOps(Constants.ONLY_NUM);
+        Long increment = stringObjectBoundValueOperations.increment(1);//自增
+        return increment;
+    }
+
+    @Override
     public String checkMessageCode(String messageCode) {
         String flag = "1";
         Object o = redisTemplate.opsForValue().get(Constants.MESSAGE_CODE);

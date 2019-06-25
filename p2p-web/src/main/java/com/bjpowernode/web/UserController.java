@@ -351,4 +351,95 @@ public class UserController {
         model.addAttribute("incomeRecordVOPageVO", incomeRecordVOPageVO);
         return "myIncome";
     }
+
+    @RequestMapping(value = "/user/checkBank")
+    public String checkBank(HttpServletRequest request,Model model,
+                            @RequestParam(value = "accName",required = true) String accName,
+                            @RequestParam(value = "cardPhone",required = true) String cardPhone,
+                            @RequestParam(value = "certificateNo",required = true) String certificateNo,
+                            @RequestParam(value = "cardNo",required = true) String cardNo) throws Exception {
+        MsgVO msgVO = new MsgVO();
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("accName",accName);
+        paramMap.put("cardPhone",cardPhone);
+        paramMap.put("certificateNo",certificateNo);
+        paramMap.put("cardNo",cardNo);
+        paramMap.put("appkey","8b45d0f51d3711d5714bd67a6a7dd8cd");
+        String resStr = HttpClientUtils.doPost("https://way.jd.com/YOUYU365/keyelement", paramMap);
+        resStr = "{\n" +
+                "    \"code\": \"10000\",\n" +
+                "    \"charge\": false,\n" +
+                "    \"remain\": 1305,\n" +
+                "    \"msg\": \"查询成功\",\n" +
+                "    \"result\": {\n" +
+                "        \"serialNo\": \"5590601f953b512ff9695bc58ad49269\",\n" +
+                "        \"respCode\": \"000000\",\n" +
+                "        \"respMsg\": \"验证通过\",\n" +
+                "        \"comfrom\": \"jd_query\",\n" +
+                "        \"success\": \"true\"\n" +
+                "    }\n" +
+                "}";
+        JSONObject jsonObject = JSONObject.parseObject(resStr);
+        String commCode = (String) jsonObject.get("code");
+        if(StringUtils.equals("10000", commCode)){
+            JSONObject result = jsonObject.getJSONObject("result");
+            String flag = (String) result.get("success");
+            if(StringUtils.equals("true", flag)){
+                msgVO.setCode(Constants.SUCCESS);
+                msgVO.setMsg("验证成功");
+            }else{
+                msgVO.setCode(Constants.FAIL);
+                msgVO.setMsg("验证失败");
+            }
+        }else{
+            msgVO.setCode(Constants.FAIL);
+            msgVO.setMsg("通信失败");
+        }
+        model.addAttribute("msg", msgVO);
+        return "result";
+    }
+
+    @RequestMapping(value = "/user/test1Message")
+    @ResponseBody
+    public Object testMessage(HttpServletRequest request,
+                              @RequestParam(value = "cardPhone",required = true) String cardPhone) throws Exception {
+        MsgVO msgVO = new MsgVO();
+        String messageCode = getRandomMessageCode();
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("content","【创信】你的验证码是："+messageCode+"，3分钟内有效！");
+        paramMap.put("mobile",cardPhone);
+        paramMap.put("appkey","8b45d0f51d3711d5714bd67a6a7dd8cd");
+        String resStr = HttpClientUtils.doPost("https://way.jd.com/chuangxin/dxjk", paramMap);
+        resStr="{\n" +
+                "    \"code\": \"10000\",\n" +
+                "    \"charge\": false,\n" +
+                "    \"remain\": 1305,\n" +
+                "    \"msg\": \"查询成功\",\n" +
+                "    \"result\": {\n" +
+                "        \"ReturnStatus\": \"Success\",\n" +
+                "        \"Message\": \"ok\",\n" +
+                "        \"RemainPoint\": 420842,\n" +
+                "        \"TaskID\": 18424321,\n" +
+                "        \"SuccessCounts\": 1\n" +
+                "    }\n" +
+                "}";
+        JSONObject jsonObject = JSONObject.parseObject(resStr);
+        String commCode = (String) jsonObject.get("code");
+        if(StringUtils.equals("10000", commCode)){
+            JSONObject result = jsonObject.getJSONObject("result");
+            String flag = (String) result.get("ReturnStatus");
+            if(StringUtils.equals("Success", flag)){
+                msgVO.setCode(Constants.SUCCESS);
+                msgVO.setMsg(messageCode);
+                redisService.addMessageCode(messageCode);
+            }else{
+                msgVO.setCode(Constants.FAIL);
+                msgVO.setMsg(messageCode);
+            }
+        }else{
+            msgVO.setCode(Constants.FAIL);
+            msgVO.setMsg("通信失败");
+        }
+        return msgVO;
+    }
 }

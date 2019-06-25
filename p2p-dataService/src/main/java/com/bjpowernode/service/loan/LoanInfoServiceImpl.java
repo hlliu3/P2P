@@ -12,9 +12,11 @@ import com.bjpowernode.mapper.loan.LoanInfoMapper;
 import com.bjpowernode.vo.MsgVO;
 import com.bjpowernode.vo.PageVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -93,8 +95,6 @@ public class LoanInfoServiceImpl implements LoanInfoService {
     public MsgVO invest(HashMap<String, Object> paramMap) {
         MsgVO msgVO = new MsgVO();
         User user = (User) paramMap.get(Constants.USER_INFO);
-        //投资
-
         //查询产品信息表的版本号和剩余可投金额，状态
         Integer id = (Integer) paramMap.get("loanId");
         LoanInfo loanInfo = loanInfoMapper.selectByPrimaryKey(id);
@@ -152,6 +152,12 @@ public class LoanInfoServiceImpl implements LoanInfoService {
                             }else if(0 > li.getLeftProductMoney()){
                                  msgVO.setCode(Constants.FAIL);
                             }*/
+                           //投资成功
+                            msgVO.setCode(Constants.SUCCESS);
+                           //将投资记录放入redis缓存中，使用zset集合存储
+                            BoundZSetOperations boundZSetOperations = redisTemplate.boundZSetOps(Constants.BID_TOP);
+                            //通键值对的增加值，不同的新增记录
+                            boundZSetOperations.incrementScore(user.getPhone(), bidMoney);
                         }
                     }else{
                         msgVO.setCode(Constants.FAIL);
@@ -167,7 +173,9 @@ public class LoanInfoServiceImpl implements LoanInfoService {
             msgVO.setCode(Constants.FAIL);
             msgVO.setMsg("超过投资限制！");
         }
-        msgVO.setCode(Constants.SUCCESS);
         return msgVO;
     }
+
+
+
 }

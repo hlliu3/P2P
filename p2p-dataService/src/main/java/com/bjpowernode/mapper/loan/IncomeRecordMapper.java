@@ -58,4 +58,6 @@ public interface IncomeRecordMapper {
     List<IncomeRecordVO> selectIncomeRecordByUid(Map<String, Object> paramMapIncomeRecord);
 
     Integer selectAllIncomeRecordCountByUid(Map<String, Object> paramMap);
+
+    List<IncomeRecord> selectAllIncomeRecordByDueDate();
 }

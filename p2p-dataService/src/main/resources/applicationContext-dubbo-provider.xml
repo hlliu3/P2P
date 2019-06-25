@@ -10,7 +10,7 @@
     <dubbo:application name="dataservice"/>
 
     <!-- 配置zookeeper注册中心 -->
-    <dubbo:registry protocol="zookeeper" address="192.168.20.128:2181"/>
+    <dubbo:registry protocol="zookeeper" address="192.168.20.130:2181"/>
 
     <!--配置提供者-->
     <dubbo:service interface="com.bjpowernode.service.loan.LoanInfoService" version="1.0.0" ref="loanInfoServiceImpl"/>

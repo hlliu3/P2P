@@ -81,4 +81,10 @@ public interface LoanInfoMapper {
      * @return
      */
     int updateLoanInfoAfterInvest(HashMap<String, Object> loanMap);
+
+    /**
+     * 查询所有已满标的产品信息
+     * @return
+     */
+    List<LoanInfo> selectAllFullScaleLoan();
 }

@@ -1,5 +1,6 @@
 package com.bjpowernode.timer;
 
+import com.bjpowernode.service.account.FinanceAccountService;
 import com.bjpowernode.service.income.IncomeRecordService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -22,20 +23,38 @@ public class IncomeController {
 
     @Autowired
     private IncomeRecordService incomeRecordService;
-    //生成收益计划
-    @Scheduled(cron = "0/5 * * * * ?")//每5秒执行一次
+    @Autowired
+    private FinanceAccountService financeAccountService;
+
+    /**
+     * 生成收益计划
+     */
+    //@Scheduled(cron = "0/5 * * * * ?")//每5秒执行一次
     public void incomeSchedule(){
         logger.info("-------生成收益计划开始-------");
         incomeRecordService.addIncomeSchedules();
 
         logger.info("-------生成受益计划结束-------");
     }
-    //生成收益
-    @Scheduled(cron = "0/5 * * * * ?")//每5秒执行一次
+
+    /**
+     * 生成收益
+     */
+    //@Scheduled(cron = "0/5 * * * * ?")//每5秒执行一次
     public void income(){
         logger.info("-------生成收益开始--------");
         incomeRecordService.addIncome();
         logger.info("-------生成收益结束--------");
     }
 
+    /**
+     * 解决掉单问题
+     *
+     */
+    @Scheduled(cron = "0/20 * * * * ?")
+    public void rechargeAfterFail(){
+        logger.info("-------解决掉单开始--------");
+        financeAccountService.rechargeAfterFail();
+        logger.info("-------解决掉单结束-------");
+    }
 }

@@ -114,4 +114,18 @@
     <include refid="Base_Column_List"/>
     from u_finance_account where uid = #{userId}
   </select>
+
+  <update id="updateFinanceAfterIncome" parameterType="java.util.Map">
+    update u_finance_account
+    set available_money = available_money + #{incomemoney} + #{bidmoney}
+    where uid = #{userid}
+  </update>
+
+  <update id="updateFinaceAccountByUid" parameterType="com.bjpowernode.model.FinanceAccount">
+    update u_finance_account
+
+    set  available_money = available_money + #{availableMoney,jdbcType=DOUBLE}
+
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
 </mapper>

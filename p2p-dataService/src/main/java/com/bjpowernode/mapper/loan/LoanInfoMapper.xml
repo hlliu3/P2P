@@ -285,5 +285,10 @@
     where id = #{id} and version = #{version} and left_product_money &gt;= #{money}
   </update>
 
+  <select id="selectAllFullScaleLoan" resultMap="BaseResultMap">
+    select *
+    from b_loan_info
+    where left_product_money = 0 and product_status = 1;
+  </select>
 
 </mapper>

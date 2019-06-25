@@ -14,4 +14,7 @@ import java.util.Map;
 public interface FinanceAccountService {
     FinanceAccount queryFinanceAccountByUid(Integer userId);
 
+    Integer modifyFinaceAccountAfterRecharge(FinanceAccount financeAccount);
+
+    void rechargeAfterFail();
 }

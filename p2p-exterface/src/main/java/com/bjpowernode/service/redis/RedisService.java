@@ -11,4 +11,6 @@ public interface RedisService {
     public void addMessageCode(String randomMessageCode);
 
     String checkMessageCode(String messageCode);
+
+    Long createOnlyNum();
 }

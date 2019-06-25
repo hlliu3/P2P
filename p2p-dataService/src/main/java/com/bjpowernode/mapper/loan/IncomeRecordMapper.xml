@@ -184,4 +184,10 @@
     from b_income_record
     where uid = #{uid}
   </select>
+
+  <select id="selectAllIncomeRecordByDueDate" resultMap="BaseResultMap">
+    select *
+    from b_income_record
+    where income_date = current_date and income_status = 0;
+  </select>
 </mapper>

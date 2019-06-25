@@ -8,10 +8,7 @@ import com.bjpowernode.model.RechargeRecord;
 import com.bjpowernode.vo.PageVO;
 import com.bjpowernode.vo.UserRecentBidVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundValueOperations;
-import org.springframework.data.redis.core.BoundZSetOperations;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
@@ -55,9 +52,22 @@ public class BidInfoServiceImpl implements BidInfoService {
     @Override
     public List<Map<String, Object>> queryBidInfoByUid() {
 
-       //todo
-
-        return null;
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        BoundZSetOperations<Object, Object> objectObjectBoundZSetOperations = redisTemplate.boundZSetOps(Constants.BID_TOP);
+        Long size = objectObjectBoundZSetOperations.size();
+        
+        //Set<ZSetOperations.TypedTuple<Object>> typedTuples = redisTemplate.opsForZSet().reverseRangeWithScores(Constants.BID_TOP, 0, 5);
+        Set<ZSetOperations.TypedTuple<Object>> typedTuples = objectObjectBoundZSetOperations.reverseRangeWithScores(0, 5);
+        Iterator<ZSetOperations.TypedTuple<Object>> iterator = typedTuples.iterator();
+        while (iterator.hasNext()){
+            ZSetOperations.TypedTuple<Object> next = iterator.next();
+            String value = (String) next.getValue();
+            Double score = next.getScore();
+            Map<String,Object> resMap = new HashMap<>();
+            resMap.put(value, score);
+            mapList.add(resMap);
+        }
+        return mapList;
     }
 
     @Override

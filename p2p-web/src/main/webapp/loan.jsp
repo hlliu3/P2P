@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -84,6 +86,7 @@
 				<a id="lnkNext" href="${pageContext.request.contextPath}/loan/loan?currentPage=${pageVO.totalPage}&ptype=${productType}&pageSize=9">尾页</a>
 			</c:otherwise>
 			</c:choose>
+
 			</td>
 		</tr>
 		</tbody>
@@ -98,8 +101,8 @@
 	        <div class="system-notice" style="margin-top: 0px;">
 	            <div class="system-tit"><h3>投资排行榜</h3></div>
 	            <ul>
-	            <c:forEach items="${topUserList}" var="topUser" varStatus="index">
-	            	<li><span>${index.count}.&nbsp;${topUser.phone}&nbsp;&nbsp;${topUser.score}</span></li>
+	            <c:forEach items="${bidTop}" var="topUser" varStatus="index">
+	            	<li><span>${index.count}.&nbsp;${fn:substring(topUser.keySet().toArray()[0],0,3)}******${fn:substring(topUser.keySet().toArray()[0],9,12)}&nbsp;&nbsp;${topUser.get(topUser.keySet().toArray()[0])}</span></li>
 	            </c:forEach>
 	            </ul>
 	        </div>

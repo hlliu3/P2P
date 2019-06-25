@@ -87,4 +87,20 @@ public class Constants {
      * bidstatus
      */
     public static final Integer BID_STATUS = 1;
+    /**
+     * bidTop
+     */
+    public static final String BID_TOP = "bidTop";
+    /**
+     * 未支付
+     */
+    public static final String UNPAID = "0";
+    /**
+     * redis唯一标识
+     */
+    public static final String ONLY_NUM = "onlyNum";
+    /**
+     * 充值错误信息的key
+     */
+    public static final String TRADE_MSG = "trade_msg";
 }

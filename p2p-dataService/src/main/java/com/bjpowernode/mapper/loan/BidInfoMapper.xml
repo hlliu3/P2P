@@ -204,4 +204,11 @@
       </if>
     </where>
   </select>
+
+  <select id="selectAllBidByLoanId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select *
+    from b_bid_info
+    where loan_id = #{loanInfoId}
+
+  </select>
 </mapper>

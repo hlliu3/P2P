@@ -62,4 +62,6 @@ public interface BidInfoMapper {
     List<UserRecentBidVO> selectRecentlyBidInfoByUserId(Map<String, Object> paramMapRecentBid);
 
     Integer selectAllBidCountByUid(Map<String, Object> paramMap);
+
+    List<BidInfo> selectAllBidByLoanId(Integer loanInfoId);
 }

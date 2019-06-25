@@ -2,6 +2,7 @@ package com.bjpowernode.mapper.loan;
 
 import com.bjpowernode.model.FinanceAccount;
 import com.bjpowernode.model.RechargeRecord;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.util.List;
 import java.util.Map;
@@ -58,4 +59,10 @@ public interface RechargeRecordMapper {
     List<RechargeRecord> selectRecentlyRechargeByUid(Map<String, Object> paramMapRecentRecharge);
 
     Integer selectAllRechargeRecordCountByUid(Map<String, Object> paramMap);
+
+    Integer updateRechargeRecordByRechargeNo(RechargeRecord updateRechargeStatus);
+
+    RechargeRecord selectRechargeRecordByRechargeNo(String out_trade_no);
+
+    List<RechargeRecord> selectAllRechargeRecordByRechargeStatus(String status);
 }
