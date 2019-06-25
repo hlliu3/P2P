@@ -1,0 +1,13 @@
+linux上的dubbo redis  zookeeper
+linux的地址192.168.20.130
+
+p2p-web			http port 8080 jmx port 1099
+
+p2p-dataservice		http port 8081 jmx port 1098
+
+p2p-pay			http port 9092 jmx port 1090
+
+p2p-timer		http port 8082 jmx port 1097
+
+
+
