@@ -27,7 +27,7 @@
     <dubbo-version>2.6.0</dubbo-version>
     <commons-lang3-version>3.4</commons-lang3-version><!-- 加载apache commons包start -->
     <jackson-version>2.7.3</jackson-version><!-- 加载jackson包 -->
-    <commons-io-version>2.5</commons-io-version><!-- 文件IO操作包start -->
+    <commons-io-version>2.7</commons-io-version><!-- 文件IO操作包start -->
     <httpclient-version>4.5.2</httpclient-version><!-- httpclient4.5操作包start -->
     <fastjson-version>1.2.36</fastjson-version><!-- 阿里巴巴json解析包start -->
   </properties>
